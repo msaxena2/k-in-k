@@ -17,6 +17,11 @@ rule kore-parser
     description = kore-parser $in
     command     = stack exec -- kore-parser $kore --module $module $in --no-print-definition
 
+# Remove attributes from Kore files
+rule remove-attributes
+    description = Remove attributes
+    command     = sed 's/\[.*//' $in > $out
+
 rule check-test-result
     description = Checking $in
     command     = git diff --no-index $in $expected
@@ -29,6 +34,8 @@ build .build/foobar/foobar-kompiled/timestamp : kompile foobar/foobar.k
 build foobar/foobar.kore.parses : kore-parser foobar/foobar.kore
     module = FOOBAR
 default foobar/foobar.kore.parses
+
+build .build/foobar/foobar.noattr : remove-attributes foobar/foobar.kore
 
 # foobar/bar.foobar
 
