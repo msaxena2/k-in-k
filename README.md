@@ -1,12 +1,13 @@
 K Semantics of K
 ================
 
-This project defines the semantics of the K Framework in K itself.
-Currently, the project focuses on giving semantics to the
-K compilation process. The K compilation process accepts as input
-a K definition, and outputs a Matching Logic theory (of the language definition)
-in [kore](https://github.com/kframework/kore).
 
+In this repository, we formally define the translation of the K Frontend
+Language into axioms in Matching Logic, the logic over which the semantics of
+the K Framework are defined. K being a Language used in formal verification, it
+is important the K frontend constructs have clearly defined semantics. We choose
+to implement this translation in K itself, since becoming a self-hosting
+language is an important rite of passage in a languages development.
 
 Dependencies
 ------------
