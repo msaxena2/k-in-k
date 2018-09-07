@@ -1,0 +1,50 @@
+k_bindir = ext/k/k-distribution/target/release/k/bin
+
+rule kompile
+    description = Kompiling $in ($backend)
+    command     = $k_bindir/kompile --backend $backend --debug $
+                                        --directory $$(dirname $$(dirname $out)) $in
+
+rule kast
+    description = kast $in
+    command     = $k_bindir/kast --directory $directory --kore $in > $out
+
+rule kore-exec
+    description = kore-exec $in
+    command     = stack exec -- kore-exec $kore --module FOOBAR --pattern $in > $out
+
+rule check-test-result
+    description = Checking $in
+    command     = git diff --no-index $in $expected
+
+# Foobar
+# ------
+
+build .build/foobar/foobar-kompiled/timestamp : kompile foobar/foobar.k
+    backend = kore
+
+# foobar/bar.foobar
+
+build .build/foobar/t/bar.foobar.kore   : kast foobar/t/bar.foobar $
+                                        | .build/foobar/foobar-kompiled/timestamp
+    directory = .build/foobar/
+build .build/foobar/t/bar.foobar.output : kore-exec .build/foobar/t/bar.foobar.kore $
+                                        | foobar/foobar.kore
+    kore = foobar/foobar.kore 
+default .build/foobar/t/bar.foobar.output
+build foobar/t/bar.foobar.test : check-test-result .build/foobar/t/bar.foobar.output
+    expected = foobar/t/bar.foobar.expected
+default foobar/t/bar.foobar.test
+
+# foobar/buzz.foobar
+
+build .build/foobar/t/buzz.foobar.kore   : kast foobar/t/buzz.foobar $
+                                        | .build/foobar/foobar-kompiled/timestamp
+    directory = .build/foobar/
+build .build/foobar/t/buzz.foobar.output : kore-exec .build/foobar/t/buzz.foobar.kore $
+                                        | foobar/foobar.kore
+    kore = foobar/foobar.kore 
+build foobar/t/buzz.foobar.test : check-test-result .build/foobar/t/buzz.foobar.output
+    expected = foobar/t/buzz.foobar.expected
+default foobar/t/buzz.foobar.test
+
