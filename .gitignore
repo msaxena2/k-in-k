@@ -1,3 +1,4 @@
-.build
-.stack-work
-*-kompiled
+# Build products
+/.build
+/.stack-work
+
