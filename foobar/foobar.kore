@@ -50,11 +50,10 @@ module FOOBAR
 // sorts
 
   //sort SortList{} [element{}(LblListItem{}()), unit{}(Lbl'Stop'List{}()), hook{}("LIST.List"), concat{}(Lbl'Unds'List'Unds'{}())]
-
-  sort SortKConfigVar{} [token{}()]
-  sort SortCell{} []
+  // sort SortKConfigVar{} [token{}()]
+  // sort SortCell{} []
   // sort SortBool{} []
-  sort SortKCell{} []
+  // sort SortKCell{} []
   // sort SortMap{} [element{}(Lbl'UndsPipe'-'-GT-Unds'{}()), unit{}(Lbl'Stop'Map{}()), hook{}("MAP.Map"), concat{}(Lbl'Unds'Map'Unds'{}())]
   // hooked-sort SortInt{} [hook{}("INT.Int")]
   sort SortFoo{} []
@@ -106,7 +105,7 @@ module FOOBAR
   // hooked-symbol LblremoveAll'LParUndsCommUndsRParUnds'MAP'UndsUnds'Map'Unds'Set{}(SortMap{}, SortSet{}) : SortMap{} [productionID{}("1697752980"), originalPrd{}(), hook{}("MAP.removeAll"), function{}(), klabel{}("removeAll"), functional{}()]
   // symbol LblisKConfigVar{}(SortK{}) : SortBool{} [function{}(), predicate{}("KConfigVar"), originalPrd{}()]
   // symbol LblisKCell{}(SortK{}) : SortBool{} [function{}(), predicate{}("KCell"), originalPrd{}()]
-  symbol Lbl'-LT-'k'-GT-'{}(SortK{}) : SortKCell{} [format{}("%1%i%n%2%d%n%3"), topcell{}(), cell{}(), originalPrd{}(), maincell{}(), org'Stop'kframework'Stop'definition'Stop'Production{}("syntax RuleContent ::= K"), functional{}(), constructor{}()]
+  // symbol Lbl'-LT-'k'-GT-'{}(SortK{}) : SortKCell{} [format{}("%1%i%n%2%d%n%3"), topcell{}(), cell{}(), originalPrd{}(), maincell{}(), org'Stop'kframework'Stop'definition'Stop'Production{}("syntax RuleContent ::= K"), functional{}(), constructor{}()]
   // symbol Lbl'Unds'Set'Unds'{}(SortSet{}, SortSet{}) : SortSet{} [productionID{}("817299424"), assoc{}(), idem{}(), format{}("%1%n%2"), originalPrd{}(), hook{}("SET.concat"), element{}("SetItem"), comm{}(), function{}(), left{}(), klabel{}("_Set_"), functional{}(), unit{}(".Set"), symbol'Kywd'{}()]
   // hooked-symbol Lbl'Unds'in'Unds'keys'LParUndsRParUnds'MAP'UndsUnds'K'Unds'Map{}(SortK{}, SortMap{}) : SortBool{} [productionID{}("1052317717"), originalPrd{}(), hook{}("MAP.in_keys"), function{}(), functional{}()]
 
@@ -139,8 +138,8 @@ module FOOBAR
   // axiom{R} \exists{R} (Val:SortSet{}, \equals{SortSet{}, R} (Val:SortSet{}, LblSet'Coln'difference{}(K0:SortSet{}, K1:SortSet{}))) [functional{}()] // functional
   // axiom{R} \exists{R} (Val:SortBool{}, \equals{SortBool{}, R} (Val:SortBool{}, Lbl'Unds-LT-Eqls'Set'UndsUnds'SET'UndsUnds'Set'Unds'Set{}(K0:SortSet{}, K1:SortSet{}))) [functional{}()] // functional
   // axiom{R} \exists{R} (Val:SortMap{}, \equals{SortMap{}, R} (Val:SortMap{}, LblremoveAll'LParUndsCommUndsRParUnds'MAP'UndsUnds'Map'Unds'Set{}(K0:SortMap{}, K1:SortSet{}))) [functional{}()] // functional
-  axiom{R} \exists{R} (Val:SortKCell{}, \equals{SortKCell{}, R} (Val:SortKCell{}, Lbl'-LT-'k'-GT-'{}(K0:SortK{}))) [functional{}()] // functional
-  axiom{}\implies{SortKCell{}} (\and{SortKCell{}} (Lbl'-LT-'k'-GT-'{}(X0:SortK{}), Lbl'-LT-'k'-GT-'{}(Y0:SortK{})), Lbl'-LT-'k'-GT-'{}(\and{SortK{}} (X0:SortK{}, Y0:SortK{}))) [constructor{}()] // no confusion same constructor
+  // axiom{R} \exists{R} (Val:SortKCell{}, \equals{SortKCell{}, R} (Val:SortKCell{}, Lbl'-LT-'k'-GT-'{}(K0:SortK{}))) [functional{}()] // functional
+  // axiom{}\implies{SortKCell{}} (\and{SortKCell{}} (Lbl'-LT-'k'-GT-'{}(X0:SortK{}), Lbl'-LT-'k'-GT-'{}(Y0:SortK{})), Lbl'-LT-'k'-GT-'{}(\and{SortK{}} (X0:SortK{}, Y0:SortK{}))) [constructor{}()] // no confusion same constructor
   // axiom{R} \equals{SortSet{}, R} (Lbl'Unds'Set'Unds'{}(Lbl'Unds'Set'Unds'{}(K1:SortSet{},K2:SortSet{}),K3:SortSet{}),Lbl'Unds'Set'Unds'{}(K1:SortSet{},Lbl'Unds'Set'Unds'{}(K2:SortSet{},K3:SortSet{}))) [assoc{}()] // associativity
   // axiom{R} \equals{SortSet{}, R} (Lbl'Unds'Set'Unds'{}(K1:SortSet{},K2:SortSet{}),Lbl'Unds'Set'Unds'{}(K2:SortSet{},K1:SortSet{})) [comm{}()] // commutativity
   // axiom{R} \equals{SortSet{}, R} (Lbl'Unds'Set'Unds'{}(K:SortSet{},K:SortSet{}),K:SortSet{}) [idem{}()] // idempotency
@@ -148,10 +147,10 @@ module FOOBAR
   // axiom{R} \exists{R} (Val:SortBool{}, \equals{SortBool{}, R} (Val:SortBool{}, Lbl'Unds'in'Unds'keys'LParUndsRParUnds'MAP'UndsUnds'K'Unds'Map{}(K0:SortK{}, K1:SortMap{}))) [functional{}()] // functional
   // axiom{} \or{SortKItem{}} (\exists{SortKItem{}} (Val:SortInt{}, inj{SortInt{}, SortKItem{}} (Val:SortInt{})), \or{SortKItem{}} (\exists{SortKItem{}} (Val:SortKCell{}, inj{SortKCell{}, SortKItem{}} (Val:SortKCell{})), \or{SortKItem{}} (\exists{SortKItem{}} (Val:SortSet{}, inj{SortSet{}, SortKItem{}} (Val:SortSet{})), \or{SortKItem{}} (\exists{SortKItem{}} (Val:SortMap{}, inj{SortMap{}, SortKItem{}} (Val:SortMap{})), \or{SortKItem{}} (\exists{SortKItem{}} (Val:SortList{}, inj{SortList{}, SortKItem{}} (Val:SortList{})), \or{SortKItem{}} (\exists{SortKItem{}} (Val:SortCell{}, inj{SortCell{}, SortKItem{}} (Val:SortCell{})), \or{SortKItem{}} (\exists{SortKItem{}} (Val:SortBool{}, inj{SortBool{}, SortKItem{}} (Val:SortBool{})), \or{SortKItem{}} (\exists{SortKItem{}} (Val:SortFoo{}, inj{SortFoo{}, SortKItem{}} (Val:SortFoo{})), \bottom{SortKItem{}}())))))))) [constructor{}()] // no junk
   // axiom{} \or{SortList{}} (\exists{SortList{}} (X0:SortList{}, \exists{SortList{}} (X1:SortList{}, Lbl'Unds'List'Unds'{}(X0:SortList{}, X1:SortList{}))), \or{SortList{}} (Lbl'Stop'List{}(), \bottom{SortList{}}())) [constructor{}()] // no junk
-  axiom{} \or{SortKConfigVar{}} (\top{SortKConfigVar{}}(), \bottom{SortKConfigVar{}}()) [constructor{}()] // no junk (TODO: fix bug with \dv)
-  axiom{} \or{SortCell{}} (\exists{SortCell{}} (Val:SortKCell{}, inj{SortKCell{}, SortCell{}} (Val:SortKCell{})), \bottom{SortCell{}}()) [constructor{}()] // no junk
+  // axiom{} \or{SortKConfigVar{}} (\top{SortKConfigVar{}}(), \bottom{SortKConfigVar{}}()) [constructor{}()] // no junk (TODO: fix bug with \dv)
+  // axiom{} \or{SortCell{}} (\exists{SortCell{}} (Val:SortKCell{}, inj{SortKCell{}, SortCell{}} (Val:SortKCell{})), \bottom{SortCell{}}()) [constructor{}()] // no junk
   // axiom{} \bottom{SortBool{}}() [constructor{}()] // no junk
-  axiom{} \or{SortKCell{}} (\exists{SortKCell{}} (X0:SortK{}, Lbl'-LT-'k'-GT-'{}(X0:SortK{})), \bottom{SortKCell{}}()) [constructor{}()] // no junk
+  // axiom{} \or{SortKCell{}} (\exists{SortKCell{}} (X0:SortK{}, Lbl'-LT-'k'-GT-'{}(X0:SortK{})), \bottom{SortKCell{}}()) [constructor{}()] // no junk
   axiom{} \or{SortK{}} (\exists{SortK{}} (Val:SortKItem{}, inj{SortKItem{}, SortK{}} (Val:SortKItem{})), \bottom{SortK{}}()) [constructor{}()] // no junk
   // axiom{} \or{SortMap{}} (\exists{SortMap{}} (X0:SortMap{}, \exists{SortMap{}} (X1:SortMap{}, Lbl'Unds'Map'Unds'{}(X0:SortMap{}, X1:SortMap{}))), \or{SortMap{}} (Lbl'Stop'Map{}(), \bottom{SortMap{}}())) [constructor{}()] // no junk
   // axiom{} \or{SortInt{}} (\top{SortInt{}}(), \bottom{SortInt{}}()) [constructor{}()] // no junk (TODO: fix bug with \dv)
