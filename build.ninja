@@ -66,6 +66,7 @@ build $builddir/foobar/t/buzz.foobar.kore   : kast foobar/t/buzz.foobar $
     directory = $builddir/foobar/
 build $builddir/foobar/t/buzz.foobar.output : kore-exec $builddir/foobar/t/buzz.foobar.kore $
                                         | foobar/foobar.kore
+    kore = foobar/foobar.kore
     module = FOOBAR
 build foobar/t/buzz.foobar.test : check-test-result $builddir/foobar/t/buzz.foobar.output
     expected = foobar/t/buzz.foobar.expected
