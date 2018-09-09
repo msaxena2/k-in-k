@@ -26,6 +26,10 @@ rule check-test-result
     description = Checking $in
     command     = git diff --no-index $in $expected
 
+rule purge-comments
+    description = Remove commented out lines
+    command     = sed '/.*\/\/.*/d' $in > $out
+
 # Foobar
 # ------
 
@@ -37,6 +41,9 @@ default foobar/foobar.kore.parses
 
 build .build/foobar/foobar.noattr : remove-attributes foobar/foobar.kore
 
+build foobar/foobar.uncommented.kore : purge-comments foobar/foobar.kore
+
+
 # foobar/bar.foobar
 
 build .build/foobar/t/bar.foobar.kore   : kast foobar/t/bar.foobar $
@@ -44,7 +51,7 @@ build .build/foobar/t/bar.foobar.kore   : kast foobar/t/bar.foobar $
     directory = .build/foobar/
 build .build/foobar/t/bar.foobar.output : kore-exec .build/foobar/t/bar.foobar.kore $
                                         | foobar/foobar.kore
-    kore = foobar/foobar.kore 
+    kore = foobar/foobar.kore
     module = FOOBAR
 default .build/foobar/t/bar.foobar.output
 build foobar/t/bar.foobar.test : check-test-result .build/foobar/t/bar.foobar.output
@@ -58,7 +65,6 @@ build .build/foobar/t/buzz.foobar.kore   : kast foobar/t/buzz.foobar $
     directory = .build/foobar/
 build .build/foobar/t/buzz.foobar.output : kore-exec .build/foobar/t/buzz.foobar.kore $
                                         | foobar/foobar.kore
-    kore = foobar/foobar.kore 
     module = FOOBAR
 build foobar/t/buzz.foobar.test : check-test-result .build/foobar/t/buzz.foobar.output
     expected = foobar/t/buzz.foobar.expected
