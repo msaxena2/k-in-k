@@ -131,7 +131,7 @@ module FOOBAR
   // axiom{R} \exists{R} (Val:SortInt{}, \equals{SortInt{}, R} (Val:SortInt{}, Lblsize'LParUndsRParUnds'LIST'UndsUnds'List{}(K0:SortList{}))) [functional{}()] // functional
   // axiom{R} \exists{R} (Val:SortMap{}, \equals{SortMap{}, R} (Val:SortMap{}, Lbl'UndsPipe'-'-GT-Unds'{}(K0:SortK{}, K1:SortK{}))) [functional{}()] // functional
   //  axiom{R} \exists{R} (Val:SortBool{}, \equals{SortBool{}, R} (Val:SortBool{}, Lbl'Unds'in'UndsUnds'LIST'UndsUnds'K'Unds'List{}(K0:SortK{}, K1:SortList{}))) [functional{}()] // functional
-  axiom{R} \exists{R} (Val:SortFoo{}, \equals{SortFoo{}, R} (Val:SortFoo{}, Lblbuzz'Unds'FOOBAR'Unds'{}())) [functional{}()] // functional
+  // axiom{R} \exists{R} (Val:SortFoo{}, \equals{SortFoo{}, R} (Val:SortFoo{}, Lblbuzz'Unds'FOOBAR'Unds'{}())) [functional{}()] // functional
   // axiom{R} \exists{R} (Val:SortSet{}, \equals{SortSet{}, R} (Val:SortSet{}, LblSetItem{}(K0:SortK{}))) [functional{}()] // functional
   // axiom{R} \exists{R} (Val:SortMap{}, \equals{SortMap{}, R} (Val:SortMap{}, Lbl'Stop'Map{}())) [functional{}()] // functional
   // axiom{R} \exists{R} (Val:SortSet{}, \equals{SortSet{}, R} (Val:SortSet{}, LblintersectSet'LParUndsCommUndsRParUnds'SET'UndsUnds'Set'Unds'Set{}(K0:SortSet{}, K1:SortSet{}))) [functional{}()] // functional
@@ -151,10 +151,10 @@ module FOOBAR
   // axiom{} \or{SortCell{}} (\exists{SortCell{}} (Val:SortKCell{}, inj{SortKCell{}, SortCell{}} (Val:SortKCell{})), \bottom{SortCell{}}()) [constructor{}()] // no junk
   // axiom{} \bottom{SortBool{}}() [constructor{}()] // no junk
   // axiom{} \or{SortKCell{}} (\exists{SortKCell{}} (X0:SortK{}, Lbl'-LT-'k'-GT-'{}(X0:SortK{})), \bottom{SortKCell{}}()) [constructor{}()] // no junk
-  axiom{} \or{SortK{}} (\exists{SortK{}} (Val:SortKItem{}, inj{SortKItem{}, SortK{}} (Val:SortKItem{})), \bottom{SortK{}}()) [constructor{}()] // no junk
+  //axiom{} \or{SortK{}} (\exists{SortK{}} (Val:SortKItem{}, inj{SortKItem{}, SortK{}} (Val:SortKItem{})), \bottom{SortK{}}()) [constructor{}()] // no junk
   // axiom{} \or{SortMap{}} (\exists{SortMap{}} (X0:SortMap{}, \exists{SortMap{}} (X1:SortMap{}, Lbl'Unds'Map'Unds'{}(X0:SortMap{}, X1:SortMap{}))), \or{SortMap{}} (Lbl'Stop'Map{}(), \bottom{SortMap{}}())) [constructor{}()] // no junk
   // axiom{} \or{SortInt{}} (\top{SortInt{}}(), \bottom{SortInt{}}()) [constructor{}()] // no junk (TODO: fix bug with \dv)
-  axiom{} \or{SortFoo{}} (Lblbuzz'Unds'FOOBAR'Unds'{}(), \bottom{SortFoo{}}()) [constructor{}()] // no junk
+  // axiom{} \or{SortFoo{}} (Lblbuzz'Unds'FOOBAR'Unds'{}(), \bottom{SortFoo{}}()) [constructor{}()] // no junk
   // axiom{} \or{SortSet{}} (Lbl'Stop'Set{}(), \or{SortSet{}} (\exists{SortSet{}} (X0:SortSet{}, \exists{SortSet{}} (X1:SortSet{}, Lbl'Unds'Set'Unds'{}(X0:SortSet{}, X1:SortSet{}))), \bottom{SortSet{}}())) [constructor{}()] // no junk
 
 // rules
