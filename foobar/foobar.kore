@@ -56,7 +56,7 @@ module FOOBAR
   sort SortBool{} []
   sort SortKCell{} []
   // sort SortMap{} [element{}(Lbl'UndsPipe'-'-GT-Unds'{}()), unit{}(Lbl'Stop'Map{}()), hook{}("MAP.Map"), concat{}(Lbl'Unds'Map'Unds'{}())]
-  hooked-sort SortInt{} [hook{}("INT.Int")]
+  // hooked-sort SortInt{} [hook{}("INT.Int")]
   sort SortFoo{} []
   // sort SortSet{} [element{}(LblSetItem{}()), unit{}(Lbl'Stop'Set{}()), hook{}("SET.Set"), concat{}(Lbl'Unds'Set'Unds'{}())]
 
@@ -154,7 +154,7 @@ module FOOBAR
   axiom{} \or{SortKCell{}} (\exists{SortKCell{}} (X0:SortK{}, Lbl'-LT-'k'-GT-'{}(X0:SortK{})), \bottom{SortKCell{}}()) [constructor{}()] // no junk
   axiom{} \or{SortK{}} (\exists{SortK{}} (Val:SortKItem{}, inj{SortKItem{}, SortK{}} (Val:SortKItem{})), \bottom{SortK{}}()) [constructor{}()] // no junk
   // axiom{} \or{SortMap{}} (\exists{SortMap{}} (X0:SortMap{}, \exists{SortMap{}} (X1:SortMap{}, Lbl'Unds'Map'Unds'{}(X0:SortMap{}, X1:SortMap{}))), \or{SortMap{}} (Lbl'Stop'Map{}(), \bottom{SortMap{}}())) [constructor{}()] // no junk
-  axiom{} \or{SortInt{}} (\top{SortInt{}}(), \bottom{SortInt{}}()) [constructor{}()] // no junk (TODO: fix bug with \dv)
+  // axiom{} \or{SortInt{}} (\top{SortInt{}}(), \bottom{SortInt{}}()) [constructor{}()] // no junk (TODO: fix bug with \dv)
   axiom{} \or{SortFoo{}} (Lblbuzz'Unds'FOOBAR'Unds'{}(), \bottom{SortFoo{}}()) [constructor{}()] // no junk
   // axiom{} \or{SortSet{}} (Lbl'Stop'Set{}(), \or{SortSet{}} (\exists{SortSet{}} (X0:SortSet{}, \exists{SortSet{}} (X1:SortSet{}, Lbl'Unds'Set'Unds'{}(X0:SortSet{}, X1:SortSet{}))), \bottom{SortSet{}}())) [constructor{}()] // no junk
 
@@ -235,12 +235,12 @@ module FOOBAR
               \and{SortBool{}} (
                 \top{SortBool{}}(),
                 LblisKItem{}(kseq{}(inj{SortBool{}, SortKItem{}}(VarBool:SortBool{}),dotk{}()))))),
-        \or{R} (
-          \ceil{SortBool{},R} (
-            \exists{SortBool{}} (VarInt:SortInt{},
-              \and{SortBool{}} (
-                \top{SortBool{}}(),
-                LblisKItem{}(kseq{}(inj{SortInt{}, SortKItem{}}(VarInt:SortInt{}),dotk{}()))))),
+        // \or{R} (
+        //   \ceil{SortBool{},R} (
+        //     \exists{SortBool{}} (VarInt:SortInt{},
+        //       \and{SortBool{}} (
+        //         \top{SortBool{}}(),
+        //         LblisKItem{}(kseq{}(inj{SortInt{}, SortKItem{}}(VarInt:SortInt{}),dotk{}()))))),
         // \or{R} (
         //  \ceil{SortBool{},R} (
         //    \exists{SortBool{}} (VarMap:SortMap{},
@@ -265,7 +265,7 @@ module FOOBAR
               \and{SortBool{}} (
                 \top{SortBool{}}(),
                 LblisKItem{}(kseq{}(inj{SortKItem{}, SortKItem{}}(VarKItem:SortKItem{}),dotk{}()))))),
-        \bottom{R}()))))))),
+        \bottom{R}())))))),
       \top{R}()),
     \and{R} (
       \equals{SortBool{},R} (
@@ -363,14 +363,14 @@ module FOOBAR
   []
 
 // rule isInt(inj{Int,KItem}(Int))=>#token("true","Bool") requires #token("true","Bool") ensures #token("true","Bool") []
-  axiom{R} \implies{R} (
-    \top{R}(),
-    \and{R} (
-      \equals{SortBool{},R} (
-        LblisInt{}(kseq{}(inj{SortInt{}, SortKItem{}}(VarInt:SortInt{}),dotk{}())),
-        \dv{SortBool{}}("true")),
-      \top{R}()))
-  []
+  // axiom{R} \implies{R} (
+  //   \top{R}(),
+  //   \and{R} (
+  //     \equals{SortBool{},R} (
+  //       LblisInt{}(kseq{}(inj{SortInt{}, SortKItem{}}(VarInt:SortInt{}),dotk{}())),
+  //       \dv{SortBool{}}("true")),
+  //     \top{R}()))
+  // []
 
 // rule isKItem(inj{Cell,KItem}(Cell))=>#token("true","Bool") requires #token("true","Bool") ensures #token("true","Bool") []
   axiom{R} \implies{R} (
@@ -422,14 +422,14 @@ module FOOBAR
   // [initializer{}()]
 
 // rule isKItem(inj{Int,KItem}(Int))=>#token("true","Bool") requires #token("true","Bool") ensures #token("true","Bool") []
-  axiom{R} \implies{R} (
-    \top{R}(),
-    \and{R} (
-      \equals{SortBool{},R} (
-        LblisKItem{}(kseq{}(inj{SortInt{}, SortKItem{}}(VarInt:SortInt{}),dotk{}())),
-        \dv{SortBool{}}("true")),
-      \top{R}()))
-  []
+  // axiom{R} \implies{R} (
+  //   \top{R}(),
+  //   \and{R} (
+  //     \equals{SortBool{},R} (
+  //       LblisKItem{}(kseq{}(inj{SortInt{}, SortKItem{}}(VarInt:SortInt{}),dotk{}())),
+  //       \dv{SortBool{}}("true")),
+  //     \top{R}()))
+  // []
 
 // rule isKItem(inj{List,KItem}(List))=>#token("true","Bool") requires #token("true","Bool") ensures #token("true","Bool") []
   // axiom{R} \implies{R} (
@@ -585,23 +585,23 @@ module FOOBAR
   [owise{}()]
 
 // rule isInt(K)=>#token("false","Bool") requires #token("true","Bool") ensures #token("true","Bool") [owise()]
-  axiom{R} \implies{R} (
-    \and{R} (
-      \not{R} (
-        \or{R} (
-          \ceil{SortBool{},R} (
-            \exists{SortBool{}} (VarInt:SortInt{},
-              \and{SortBool{}} (
-                \top{SortBool{}}(),
-                LblisInt{}(kseq{}(inj{SortInt{}, SortKItem{}}(VarInt:SortInt{}),dotk{}()))))),
-        \bottom{R}())),
-      \top{R}()),
-    \and{R} (
-      \equals{SortBool{},R} (
-        LblisInt{}(VarK:SortK{}),
-        \dv{SortBool{}}("false")),
-      \top{R}()))
-  [owise{}()]
+  // axiom{R} \implies{R} (
+  //   \and{R} (
+  //     \not{R} (
+  //       \or{R} (
+  //         \ceil{SortBool{},R} (
+  //           \exists{SortBool{}} (VarInt:SortInt{},
+  //             \and{SortBool{}} (
+  //               \top{SortBool{}}(),
+  //               LblisInt{}(kseq{}(inj{SortInt{}, SortKItem{}}(VarInt:SortInt{}),dotk{}()))))),
+  //       \bottom{R}())),
+  //     \top{R}()),
+  //   \and{R} (
+  //     \equals{SortBool{},R} (
+  //       LblisInt{}(VarK:SortK{}),
+  //       \dv{SortBool{}}("false")),
+  //     \top{R}()))
+  // [owise{}()]
 
 // rule isMap(inj{Map,KItem}(Map))=>#token("true","Bool") requires #token("true","Bool") ensures #token("true","Bool") []
   // axiom{R} \implies{R} (
