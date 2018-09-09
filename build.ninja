@@ -1,3 +1,4 @@
+builddir = .build
 k_bindir = ext/k/k-distribution/target/release/k/bin
 
 rule kompile
@@ -33,40 +34,40 @@ rule purge-comments
 # Foobar
 # ------
 
-build .build/foobar/foobar-kompiled/timestamp : kompile foobar/foobar.k
+build $builddir/foobar/foobar-kompiled/timestamp : kompile foobar/foobar.k
     backend = kore
 build foobar/foobar.kore.parses : kore-parser foobar/foobar.kore
     module = FOOBAR
 default foobar/foobar.kore.parses
 
-build .build/foobar/foobar.noattr : remove-attributes foobar/foobar.kore
+build $builddir/foobar/foobar.noattr : remove-attributes foobar/foobar.kore
 
 build foobar/foobar.uncommented.kore : purge-comments foobar/foobar.kore
 
 
 # foobar/bar.foobar
 
-build .build/foobar/t/bar.foobar.kore   : kast foobar/t/bar.foobar $
-                                        | .build/foobar/foobar-kompiled/timestamp
-    directory = .build/foobar/
-build .build/foobar/t/bar.foobar.output : kore-exec .build/foobar/t/bar.foobar.kore $
+build $builddir/foobar/t/bar.foobar.kore   : kast foobar/t/bar.foobar $
+                                        | $builddir/foobar/foobar-kompiled/timestamp
+    directory = $builddir/foobar/
+build $builddir/foobar/t/bar.foobar.output : kore-exec $builddir/foobar/t/bar.foobar.kore $
                                         | foobar/foobar.kore
     kore = foobar/foobar.kore
     module = FOOBAR
-default .build/foobar/t/bar.foobar.output
-build foobar/t/bar.foobar.test : check-test-result .build/foobar/t/bar.foobar.output
+default $builddir/foobar/t/bar.foobar.output
+build foobar/t/bar.foobar.test : check-test-result $builddir/foobar/t/bar.foobar.output
     expected = foobar/t/bar.foobar.expected
 default foobar/t/bar.foobar.test
 
 # foobar/buzz.foobar
 
-build .build/foobar/t/buzz.foobar.kore   : kast foobar/t/buzz.foobar $
-                                        | .build/foobar/foobar-kompiled/timestamp
-    directory = .build/foobar/
-build .build/foobar/t/buzz.foobar.output : kore-exec .build/foobar/t/buzz.foobar.kore $
+build $builddir/foobar/t/buzz.foobar.kore   : kast foobar/t/buzz.foobar $
+                                        | $builddir/foobar/foobar-kompiled/timestamp
+    directory = $builddir/foobar/
+build $builddir/foobar/t/buzz.foobar.output : kore-exec $builddir/foobar/t/buzz.foobar.kore $
                                         | foobar/foobar.kore
     module = FOOBAR
-build foobar/t/buzz.foobar.test : check-test-result .build/foobar/t/buzz.foobar.output
+build foobar/t/buzz.foobar.test : check-test-result $builddir/foobar/t/buzz.foobar.output
     expected = foobar/t/buzz.foobar.expected
 default foobar/t/buzz.foobar.test
 
