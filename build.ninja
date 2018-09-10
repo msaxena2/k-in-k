@@ -27,7 +27,7 @@ rule check-test-result
     description = Checking $in
     command     = git diff --no-index $in $expected
 
-rule purge-comments
+rule remove-comments  
     description = Remove commented out lines
     command     = sed '/.*\/\/.*/d' $in > $out
 
@@ -38,12 +38,9 @@ build $builddir/foobar/foobar-kompiled/timestamp : kompile foobar/foobar.k
     backend = kore
 build foobar/foobar.kore.parses : kore-parser foobar/foobar.kore
     module = FOOBAR
-default foobar/foobar.kore.parses
-
 build $builddir/foobar/foobar.noattr : remove-attributes foobar/foobar.kore
-
-build foobar/foobar.uncommented.kore : purge-comments foobar/foobar.kore
-
+build foobar/foobar.uncommented.kore : remove-comments   foobar/foobar.kore
+default foobar/foobar.kore.parses
 
 # foobar/bar.foobar
 
