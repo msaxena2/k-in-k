@@ -5,6 +5,9 @@ rule kompile
     description = Kompiling $in ($backend)
     command     = $k_bindir/kompile --backend $backend --debug $
                                         --directory $$(dirname $$(dirname $out)) $in
+rule krun
+    description = Krun $in
+    command     = $k_bindir/krun --directory $directory $in > $out
 
 rule kast
     description = kast $in
@@ -69,3 +72,16 @@ build foobar/t/buzz.foobar.test : check-test-result $builddir/foobar/t/buzz.foob
     expected = foobar/t/buzz.foobar.expected
 default foobar/t/buzz.foobar.test
 
+# k-aux
+# -----
+
+build $builddir/k-aux/k-aux-kompiled/timestamp  : kompile k-aux/k-aux.k
+  backend = java
+
+build $builddir/k-aux/t/imp.k-aux.output  : krun k-aux/t/imp.k-aux $
+                                       | $builddir/k-aux/k-aux-kompiled/timestamp
+  directory = $builddir/k-aux
+
+build k-aux/t/imp.k-aux.test  : check-test-result $builddir/k-aux/t/imp.k-aux.output
+  expected = k-aux/t/imp.k-aux.expected
+default k-aux/t/imp.k-aux.test
