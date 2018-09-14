@@ -34,6 +34,10 @@ rule remove-comments
     description = Remove commented out lines
     command     = sed '/.*\/\/.*/d' $in > $out
 
+rule krun-stdout
+    description = KRun and pretty print to stdout
+    command     = $k_bindir/krun  --debug --directory $directory $in
+
 # Foobar
 # ------
 
@@ -86,3 +90,7 @@ build k-aux/t/foobar.k-aux.test  : check-test-result $builddir/k-aux/t/foobar.k-
   expected = k-aux/t/foobar.k-aux.expected
 default k-aux/t/foobar.k-aux.test
 
+
+build krun-kaux: krun-stdout k-aux/t/foobar.k-aux $
+                    | $builddir/k-aux/k-aux-kompiled/timestamp
+    directory = $builddir/k-aux
