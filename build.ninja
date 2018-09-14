@@ -49,6 +49,20 @@ build $builddir/foobar/foobar.noattr : remove-attributes foobar/foobar.kore
 build foobar/foobar.uncommented.kore : remove-comments   foobar/foobar.kore
 default foobar/foobar.kore.parses
 
+# Foobar - translation
+# --------------------
+
+build $builddir/foobar/t/foobar.kaux.output  : krun foobar/t/foobar.kaux $
+                                             | $builddir/kaux/kaux-kompiled/timestamp
+  directory = $builddir/kaux
+
+build foobar/t/foobar.kaux.test : check-test-result $builddir/foobar/t/foobar.kaux.output
+  expected = foobar/t/foobar.kaux.expected
+default  foobar/t/foobar.kaux.test
+
+# Foobar - programs
+# -----------------
+
 # foobar/bar.foobar
 
 build $builddir/foobar/programs/bar.foobar.kore   : kast foobar/programs/bar.foobar $
@@ -76,21 +90,22 @@ build foobar/programs/buzz.foobar.test : check-test-result $builddir/foobar/prog
     expected = foobar/programs/buzz.foobar.expected
 default foobar/programs/buzz.foobar.test
 
-# k-aux
+# kaux
 # -----
 
-build $builddir/k-aux/k-aux-kompiled/timestamp  : kompile k-aux/k-aux.k
+build $builddir/kaux/kaux-kompiled/timestamp  : kompile kaux.k $
+                                                | kore.k
   backend = java
 
-build $builddir/k-aux/t/foobar.k-aux.output  : krun k-aux/t/foobar.k-aux $
-                                       | $builddir/k-aux/k-aux-kompiled/timestamp
-  directory = $builddir/k-aux
+build $builddir/kaux/t/foobar.kaux.output  : krun kaux/t/foobar.kaux $
+                                       | $builddir/kaux/kaux-kompiled/timestamp
+  directory = $builddir/kaux
 
-build k-aux/t/foobar.k-aux.test  : check-test-result $builddir/k-aux/t/foobar.k-aux.output
-  expected = k-aux/t/foobar.k-aux.expected
-# default k-aux/t/foobar.k-aux.test
+build kaux/t/foobar.kaux.test  : check-test-result $builddir/kaux/t/foobar.kaux.output
+  expected = kaux/t/foobar.kaux.expected
+# default kaux/t/foobar.kaux.test
 
 
-build krun-kaux: krun-stdout k-aux/t/foobar.k-aux $
-                    | $builddir/k-aux/k-aux-kompiled/timestamp
-    directory = $builddir/k-aux
+build krun-kaux: krun-stdout kaux/t/foobar.kaux $
+                    | $builddir/kaux/kaux-kompiled/timestamp
+    directory = $builddir/kaux

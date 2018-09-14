@@ -1,0 +1,7 @@
+[]
+
+module TEST
+    sort Foo { } [ ]
+    symbol bar { } ( ) : Foo
+    symbol buzz { } ( ) : Foo
+endmodule []
