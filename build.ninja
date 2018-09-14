@@ -51,30 +51,30 @@ default foobar/foobar.kore.parses
 
 # foobar/bar.foobar
 
-build $builddir/foobar/t/bar.foobar.kore   : kast foobar/t/bar.foobar $
+build $builddir/foobar/programs/bar.foobar.kore   : kast foobar/programs/bar.foobar $
                                         | $builddir/foobar/foobar-kompiled/timestamp
     directory = $builddir/foobar/
-build $builddir/foobar/t/bar.foobar.output : kore-exec $builddir/foobar/t/bar.foobar.kore $
+build $builddir/foobar/programs/bar.foobar.output : kore-exec $builddir/foobar/programs/bar.foobar.kore $
                                         | foobar/foobar.kore
     kore = foobar/foobar.kore
     module = FOOBAR
-default $builddir/foobar/t/bar.foobar.output
-build foobar/t/bar.foobar.test : check-test-result $builddir/foobar/t/bar.foobar.output
-    expected = foobar/t/bar.foobar.expected
-default foobar/t/bar.foobar.test
+default $builddir/foobar/programs/bar.foobar.output
+build foobar/programs/bar.foobar.test : check-test-result $builddir/foobar/programs/bar.foobar.output
+    expected = foobar/programs/bar.foobar.expected
+default foobar/programs/bar.foobar.test
 
 # foobar/buzz.foobar
 
-build $builddir/foobar/t/buzz.foobar.kore   : kast foobar/t/buzz.foobar $
+build $builddir/foobar/programs/buzz.foobar.kore   : kast foobar/programs/buzz.foobar $
                                         | $builddir/foobar/foobar-kompiled/timestamp
     directory = $builddir/foobar/
-build $builddir/foobar/t/buzz.foobar.output : kore-exec $builddir/foobar/t/buzz.foobar.kore $
+build $builddir/foobar/programs/buzz.foobar.output : kore-exec $builddir/foobar/programs/buzz.foobar.kore $
                                         | foobar/foobar.kore
     kore = foobar/foobar.kore
     module = FOOBAR
-build foobar/t/buzz.foobar.test : check-test-result $builddir/foobar/t/buzz.foobar.output
-    expected = foobar/t/buzz.foobar.expected
-default foobar/t/buzz.foobar.test
+build foobar/programs/buzz.foobar.test : check-test-result $builddir/foobar/programs/buzz.foobar.output
+    expected = foobar/programs/buzz.foobar.expected
+default foobar/programs/buzz.foobar.test
 
 # k-aux
 # -----
@@ -88,7 +88,7 @@ build $builddir/k-aux/t/foobar.k-aux.output  : krun k-aux/t/foobar.k-aux $
 
 build k-aux/t/foobar.k-aux.test  : check-test-result $builddir/k-aux/t/foobar.k-aux.output
   expected = k-aux/t/foobar.k-aux.expected
-default k-aux/t/foobar.k-aux.test
+# default k-aux/t/foobar.k-aux.test
 
 
 build krun-kaux: krun-stdout k-aux/t/foobar.k-aux $
