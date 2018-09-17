@@ -1,19 +1,19 @@
 require "kore.k"
-require "domains.k"
 
 module KAUX-SYNTAX
   imports KORE-SYNTAX
   imports STRING
 
-  syntax KDeclarations ::= List{KDeclaration, ""}
-  syntax KDeclaration ::= "ksyntax" "(" KSort "," KLabel ")"
-  syntax KSort        ::= "ksort"   "(" String ")"
-  syntax KLabel       ::= "klabel"  "(" String ")"
+  syntax KAuxDeclarations ::= List{KAuxDeclaration, ""}
+  syntax KAuxDeclaration ::= "ksyntax" "(" KAuxSort "," KAuxLabel ")"
+  syntax KAuxSort        ::= "ksort"   "(" Name ")"
+  syntax KAuxLabel       ::= "klabel"  "(" Name ")"
 
-  syntax AuxModule   ::=  "kmodule" Name KSentences "endkmodule"
-  syntax AuxModules  ::=  List{AuxModule, " "}          [klabel(auxModules)]
-  syntax KSentences  ::=  List{KSentence, " "}          [klabel(kSentences)]
-  syntax KSentence   ::=  KDeclaration
+  syntax KAuxModule   ::=  "kmodule" Name KAuxSentences "endkmodule"
+  syntax KAuxModules  ::=  List{KAuxModule, " "}              [klabel(kauxModules)]
+  syntax KAuxSentences  ::=  List{KAuxSentence, " "}          [klabel(kauxSentences)]
+  syntax KAuxSentence   ::=  KAuxDeclaration
+  syntax KAuxDefinition ::= KAuxModules
 
 endmodule
 
@@ -22,54 +22,129 @@ module KAUX
   imports KAUX-SYNTAX
   imports DOMAINS
 
-  configuration <KinK> <pipeline> #extractKSortStructureStep ~> .K </pipeline>
-                       <k> $PGM:KDeclarations </k>
-                       <kore> .Declarations </kore>
-                       <koreSorts>
-                </KinK>
+  syntax Processed   ::=  "#processedDefintion" "(" KAuxDefinition ")"
 
-  syntax KItem ::= "#extractKSortStructureStep"
-  rule <pipeline> #extractKSortStructureStep => .K ... </pipeline>
-       <k> PGM </k>
-       <kore> KORE => #KSortStructureToKore(#extractKSortStructure(PGM, .Map)) </kore>
+  syntax Intermdiate ::=   "#initialization"      "(" KAuxDefinition ")"
+                         | "#sortDeclaration"     "(" Intermdiate   ")"     [strict]
+                         | "#symbolDeclaration"   "(" Intermdiate   ")"     [strict]
+                         |  Processed
 
-  syntax Map ::= #extractKSortStructure(KDeclarations, Map)    [function]
-  rule #extractKSortStructure(.KDeclarations, MAP) => MAP
+  syntax KResult    ::= Processed
 
-  rule #extractKSortStructure(ksyntax(ksort(SORT), klabel(LABEL)) NEXT:KDeclarations, MAP)
-    => #extractKSortStructure( NEXT:KDeclarations
-                             , MAP [#parseToken("Name", SORT) <- SetItem(#parseToken("Name", LABEL))])
-      requires notBool (#parseToken("Name", SORT) in_keys (MAP))
+  syntax KItem ::= "#done"
 
-  syntax Set ::= #getLabelsKSortStructure(Map, Name) [function]
-  rule #getLabelsKSortStructure(MAP:Map, SORT) => MAP[SORT]
+  configuration <T>
+                  <k>
+                         #symbolDeclaration(
+                           #sortDeclaration(
+                            #initialization( $PGM:KAuxModules )
+                          )
+                        ) ~> #done
+                  </k>
+                  <kore>
+                    <definitionAttributes> [ .Patterns ] </definitionAttributes>
+                    <modules>
+                      <koreModule multiplicity="*">
+                        <name> .K </name>
+                        <sortDeclarations>   .Set </sortDeclarations>
+                        <symbolDeclarations> .Set </symbolDeclarations>
+                      </koreModule>
+                    </modules>
+                  </kore>
+                </T>
 
-  syntax Map ::= #insertKSortStructure(Map, K, K) [function]
-  rule #insertKSortStructure(MAP, SORT, LABEL)
-    => updateMap(MAP, SORT |-> (SetItem(LABEL) getLabelsKSortStructure(MAP, SORT)))
+   syntax PipelineStep ::=     "Initialization"
+                             | "SortsDeclaration"
+                             | "SymbolsDeclaration"
+   syntax Intermediate ::= "#pipelineStepHelper" "(" PipelineStep "," KAuxDefinition "|" KAuxDefinition ")"
 
-  rule #extractKSortStructure(ksyntax(ksort(SORT), klabel(LABEL)) NEXT:KDeclarations, MAP)
-    => #extractKSortStructure( NEXT:KDeclarations
-                             , #insertKSortStructure(MAP, #parseToken("Name", SORT)
-                                                        , #parseToken("Name", LABEL)))
+   rule #processedDefintion( _ ) ~> #done => #done
 
-  // rule #extractKSortStructure(ksyntax(ksort(SORT), klabel(LABEL)) NEXT:KDeclarations, MAP)
-  //   => #extractKSortStructure( NEXT:KDeclarations
-  //                            , updateMap( MAP
-  //                                       , #parseToken("Name", SORT)|-> ( #lookupSetInMap(MAP,  #parseToken("Name", SORT))
-  //                                                                        SetItem(#parseToken("Name", LABEL))
-  //                            )          )                              )
+   rule <k>
+           (
+             #pipelineStepHelper( Initialization, M | kmodule ModuleName KSntncs endkmodule Ms)
+               =>
+             #pipelineStepHelper( Initialization, (kmodule ModuleName KSntncs endkmodule) M | Ms)
+           )
+           ...
+        </k>
+        <kore>
+           ...
+           <modules>
+           (
+             .Bag =>
+             <koreModule>
+               <name> ModuleName </name>
+               ...
+             </koreModule>
+           )
+           </modules>
+       </kore>
 
-  syntax Declarations ::= #KSortStructureToKore(Map) [function]
-  rule #KSortStructureToKore(.Map) => .Declarations
-  rule #KSortStructureToKore((SORT:Name |-> LABELS))
-    => sort SORT { .Names } [ .Patterns ]
-       #mkKoreSymbols(SORT, LABELS)
+   rule #initialization( AuxDef ) => #pipelineStepHelper(Initialization, .KAuxModules | AuxDef)
 
-  syntax Declarations ::= #mkKoreSymbols(Sort, Set) [function]
-  rule #mkKoreSymbols(SORT, .Set) => .Declarations
-  rule #mkKoreSymbols(SORT, SetItem(L:Name) (LS:Set))
-    => (symbol L { .Names } ( .Sorts ) : SORT [.Patterns])
-       #mkKoreSymbols(SORT, LS)
+   rule #pipelineStepHelper( _ ,  Ms | .KAuxModules ) => #processedDefintion( Ms )
+
+
+   syntax Set ::=   "#declareSorts"         "(" KAuxSentences ")"     [function]
+                  | "#declareSortsSentence" "(" KAuxSentence  ")"     [function]
+
+   rule #sortDeclaration( #processedDefintion( Def ) ) => #pipelineStepHelper( SortsDeclaration, .KAuxModules | Def )
+
+
+   rule <k> (
+               #pipelineStepHelper( SortsDeclaration, M | kmodule Name KSentences endkmodule Ms)
+               =>
+               #pipelineStepHelper( SortsDeclaration, kmodule Name KSentences endkmodule M | Ms)
+             )
+           ...
+       </k>
+       <koreModule>
+         <name> Name </name>
+         <sortDeclarations> .Set => #declareSorts (KSentences) </sortDeclarations>
+         ...
+       </koreModule>
+
+   rule #declareSorts( .KAuxSentences ) => .Set
+
+   rule #declareSorts( KSntnc KSntncs )
+     => #declareSortsSentence( KSntnc ) #declareSorts( KSntncs )
+
+   rule #declareSortsSentence( ksyntax(ksort (SortName:Name), _ ))
+      => SetItem(sort SortName { .Names } [ .Patterns ])
+
+   rule #declareSortsSentence( KS ) => .Set    [owise]
+
+   rule #symbolDeclaration( #processedDefintion ( Def ))
+     => #pipelineStepHelper( SymbolsDeclaration, .KAuxModules | Def )
+
+   syntax Set ::=  "#declareSymbols"         "(" KAuxSentences "," Set ")" [function]
+                 | "#declareSymbolsSentence" "(" KAuxSentence "," Set ")"  [function]
+
+   rule <k> (
+               #pipelineStepHelper( SymbolsDeclaration, M | kmodule Name KSentences endkmodule Ms)
+               =>
+               #pipelineStepHelper( SymbolsDeclaration, kmodule Name KSentences endkmodule M | Ms)
+             )
+           ...
+       </k>
+       <koreModule>
+         <name> Name </name>
+         <sortDeclarations> SortsSet </sortDeclarations>
+         <symbolDeclarations> .Set => #declareSymbols(KSentences, SortsSet) </symbolDeclarations>
+       </koreModule>
+
+   rule #declareSymbols( .KAuxSentences, Set ) => .Set
+
+   rule      #declareSymbols( KSntnc KSntncs, SortsSet)
+               =>
+             #declareSymbolsSentence( KSntnc, SortsSet) #declareSymbols( KSntncs, SortsSet )
+
+   rule     #declareSymbolsSentence( ksyntax( ksort( SrtName )
+                                               , klabel( SymbolName ))
+                            , SortSet)
+                            =>
+                            SetItem(symbol SymbolName { .Names } ( .Sorts ) : SrtName [.Patterns])
+            requires (sort SrtName { .Names } [ .Patterns] in SortSet)
 
 endmodule
