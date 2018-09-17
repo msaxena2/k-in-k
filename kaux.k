@@ -9,6 +9,12 @@ module KAUX-SYNTAX
   syntax KDeclaration ::= "ksyntax" "(" KSort "," KLabel ")"
   syntax KSort        ::= "ksort"   "(" String ")"
   syntax KLabel       ::= "klabel"  "(" String ")"
+
+  syntax AuxModule   ::=  "kmodule" Name KSentences "endkmodule"
+  syntax AuxModules  ::=  List{AuxModule, " "}          [klabel(auxModules)]
+  syntax KSentences  ::=  List{KSentence, " "}          [klabel(kSentences)]
+  syntax KSentence   ::=  KDeclaration
+
 endmodule
 
 
