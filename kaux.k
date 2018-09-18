@@ -31,7 +31,8 @@ module KAUX
 
   syntax KResult    ::= Processed
 
-  syntax KItem ::= "#done"
+  syntax KItem ::=   "#done"
+                   | "#configurationDefinitionToTerm"
 
   configuration <T>
                   <k>
@@ -39,8 +40,9 @@ module KAUX
                            #sortDeclaration(
                             #initialization( $PGM:KAuxModules )
                           )
-                        ) ~> #done
+                        ) ~> #configurationDefinitionToTerm ~> #done
                   </k>
+                  <koreDefinition> .K </koreDefinition>
                   <kore>
                     <definitionAttributes> [ .Patterns ] </definitionAttributes>
                     <modules>
@@ -146,5 +148,49 @@ module KAUX
                             =>
                             SetItem(symbol SymbolName { .Names } ( .Sorts ) : SrtName [.Patterns])
             requires (sort SrtName { .Names } [ .Patterns] in SortSet)
+
+  syntax KItem ::=  "#configurationModulesToTerm"
+
+  syntax Declarations ::=  "#toKoreSentences" "(" Set ")"         [function]
+
+  rule #processedDefintion( Def ) ~> #configurationDefinitionToTerm
+        =>
+       #configurationDefinitionToTerm ~> #processedDefintion ( Def )
+
+  rule <k> ( #configurationDefinitionToTerm => #configurationModulesToTerm )... </k>
+       <koreDefinition> _ => [ .Patterns ] .Modules </koreDefinition>
+
+  // TODO: This rule doesn't handle multiple modules. Fix this rule.
+  rule <k> #configurationModulesToTerm ... </k>
+       <koreDefinition>
+          _
+            =>
+          [ .Patterns ]
+             `module`( ModuleName, #toKoreSentences( SymbolDecls SortDecls ), [ .Patterns ])
+             .Modules
+        </koreDefinition>
+        <kore>
+          ...
+          <modules>
+            ( <koreModule>
+                <name> ModuleName </name>
+                <sortDeclarations> SortDecls </sortDeclarations>
+                <symbolDeclarations> SymbolDecls </symbolDeclarations>
+             </koreModule>
+               =>
+             .Bag)
+            ...
+          </modules>
+        </kore>
+
+  rule #toKoreSentences( .Set ) => .Declarations
+
+  rule #toKoreSentences( SetItem (Decl) Decls ) => Decl #toKoreSentences( Decls )
+
+  rule <k> (#configurationModulesToTerm => .K) ... </k>
+       <kore>
+        ...
+        <modules> .Bag </modules>
+       </kore>
 
 endmodule
