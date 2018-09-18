@@ -2,23 +2,15 @@
   <k>
     #done
   </k>
+  <koreDefinition>
+    [ .Patterns ] module FOOBAR symbol bar { .Names } ( .Sorts ) : Foo [ .Patterns ]  sort Foo { .Names } [ .Patterns ]  symbol buzz { .Names } ( .Sorts ) : Foo [ .Patterns ]  .Declarations endmodule [ .Patterns ]  .Modules
+  </koreDefinition>
   <kore>
     <definitionAttributes>
       [ .Patterns ]
     </definitionAttributes>
     <modules>
-      <koreModule>
-        <name>
-          FOOBAR
-        </name>
-        <sortDeclarations>
-          SetItem ( sort Foo { .Names } [ .Patterns ] )
-        </sortDeclarations>
-        <symbolDeclarations>
-          SetItem ( symbol bar { .Names } ( .Sorts ) : Foo [ .Patterns ] )
-          SetItem ( symbol buzz { .Names } ( .Sorts ) : Foo [ .Patterns ] )
-        </symbolDeclarations>
-      </koreModule>
+      .KoreModuleCellBag
     </modules>
   </kore>
 </T>
