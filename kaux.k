@@ -5,9 +5,9 @@ module KAUX-SYNTAX
   imports STRING
 
   syntax KAuxDeclarations ::= List{KAuxDeclaration, ""}
-  syntax KAuxDeclaration ::= "ksyntax" "(" KAuxSort "," KAuxLabel ")"
-  syntax KAuxSort        ::= "ksort"   "(" Name ")"
-  syntax KAuxLabel       ::= "klabel"  "(" Name ")"
+  syntax KAuxDeclaration ::= ksyntax ( KAuxSort , KAuxLabel )
+  syntax KAuxSort        ::= ksort   ( Name )
+  syntax KAuxLabel       ::= klabel  ( Name )
 
   syntax KAuxModule   ::=  "kmodule" Name KAuxSentences "endkmodule"
   syntax KAuxModules  ::=  List{KAuxModule, " "}              [klabel(kauxModules)]
@@ -22,11 +22,11 @@ module KAUX
   imports KAUX-SYNTAX
   imports DOMAINS
 
-  syntax Processed   ::=  "#processedDefintion" "(" KAuxDefinition ")"
+  syntax Processed   ::=  #processedDefintion ( KAuxDefinition )
 
-  syntax Intermdiate ::=   "#initialization"      "(" KAuxDefinition ")"
-                         | "#sortDeclaration"     "(" Intermdiate   ")"     [strict]
-                         | "#symbolDeclaration"   "(" Intermdiate   ")"     [strict]
+  syntax Intermdiate ::=   #initialization      ( KAuxDefinition )
+                         | #sortDeclaration     ( Intermdiate   )     [strict]
+                         | #symbolDeclaration   ( Intermdiate   )     [strict]
                          |  Processed
 
   syntax KResult    ::= Processed
@@ -88,8 +88,8 @@ module KAUX
    rule #pipelineStepHelper( _ ,  Ms | .KAuxModules ) => #processedDefintion( Ms )
 
 
-   syntax Set ::=   "#declareSorts"         "(" KAuxSentences ")"     [function]
-                  | "#declareSortsSentence" "(" KAuxSentence  ")"     [function]
+   syntax Set ::=   #declareSorts         ( KAuxSentences )     [function]
+                  | #declareSortsSentence ( KAuxSentence  )     [function]
 
    rule #sortDeclaration( #processedDefintion( Def ) ) => #pipelineStepHelper( SortsDeclaration, .KAuxModules | Def )
 
@@ -120,8 +120,8 @@ module KAUX
    rule #symbolDeclaration( #processedDefintion ( Def ))
      => #pipelineStepHelper( SymbolsDeclaration, .KAuxModules | Def )
 
-   syntax Set ::=  "#declareSymbols"         "(" KAuxSentences "," Set ")" [function]
-                 | "#declareSymbolsSentence" "(" KAuxSentence "," Set ")"  [function]
+   syntax Set ::=  #declareSymbols         ( KAuxSentences , Set ) [function]
+                 | #declareSymbolsSentence ( KAuxSentence , Set )  [function]
 
    rule <k> (
                #pipelineStepHelper( SymbolsDeclaration, M | kmodule Name KSentences endkmodule Ms)
@@ -151,7 +151,7 @@ module KAUX
 
   syntax KItem ::=  "#configurationModulesToTerm"
 
-  syntax Declarations ::=  "#toKoreSentences" "(" Set ")"         [function]
+  syntax Declarations ::=  #toKoreSentences ( Set )         [function]
 
   rule #processedDefintion( Def ) ~> #configurationDefinitionToTerm
         =>
