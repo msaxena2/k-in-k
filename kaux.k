@@ -61,14 +61,14 @@ module KAUX
 
    rule #processedDefintion( _ ) ~> #done => #done
 
-   rule #initialization( AuxDef ) => #pipelineStepHelper(Initialization, .KAuxModules | AuxDef)
+   rule #initialization( AUXDEF ) => #pipelineStepHelper(Initialization, .KAuxModules | AUXDEF)
 
-   rule #pipelineStepHelper( _ ,  Ms | .KAuxModules ) => #processedDefintion( Ms )
+   rule #pipelineStepHelper( _ ,  MODULES | .KAuxModules ) => #processedDefintion( MODULES )
 
    rule <k>
-           (#pipelineStepHelper( Initialization, M | kmodule ModuleName KSntncs endkmodule Ms)
+           (#pipelineStepHelper( Initialization, MODULE | kmodule MODULENAME KSNTNCS endkmodule MODULES)
                =>
-            #pipelineStepHelper( Initialization, (kmodule ModuleName KSntncs endkmodule) M | Ms))
+            #pipelineStepHelper( Initialization, (kmodule MODULENAME KSNTNCS endkmodule) MODULE | MODULES))
            ...
         </k>
         <kore>
@@ -77,7 +77,7 @@ module KAUX
            ( .Bag
               =>
              <koreModule>
-               <name> ModuleName </name>
+               <name> MODULENAME </name>
                ...
              </koreModule>)
            </modules>
@@ -88,61 +88,61 @@ module KAUX
    syntax Set ::=   #declareSorts         ( KAuxSentences )     [function]
                   | #declareSortsSentence ( KAuxSentence  )     [function]
 
-   rule #sortDeclaration( #processedDefintion( Def ) ) => #pipelineStepHelper( SortsDeclaration, .KAuxModules | Def )
+   rule #sortDeclaration( #processedDefintion( DEF ) ) => #pipelineStepHelper( SortsDeclaration, .KAuxModules | DEF )
 
 
    rule <k>
-            (#pipelineStepHelper( SortsDeclaration, M | kmodule Name KSentences endkmodule Ms)
+            (#pipelineStepHelper( SortsDeclaration, MODULE | kmodule NAME KSENTENCES endkmodule MODULES)
               =>
-             #pipelineStepHelper( SortsDeclaration, kmodule Name KSentences endkmodule M | Ms))
+             #pipelineStepHelper( SortsDeclaration, kmodule NAME KSENTENCES endkmodule MODULE | MODULES))
            ...
        </k>
        <koreModule>
-         <name>              Name                              </name>
-         <sortDeclarations> .Set => #declareSorts (KSentences) </sortDeclarations>
+         <name>              NAME                              </name>
+         <sortDeclarations> .Set => #declareSorts( KSENTENCES ) </sortDeclarations>
          ...
        </koreModule>
 
    rule #declareSorts( .KAuxSentences ) => .Set
-   rule #declareSorts( KSntnc KSntncs ) => #declareSortsSentence( KSntnc ) #declareSorts( KSntncs )
+   rule #declareSorts( KSNTNC KSNTNCS ) => #declareSortsSentence( KSNTNC ) #declareSorts( KSNTNCS )
 
-   rule #declareSortsSentence( ksyntax(ksort (SortName:Name), _ )) => SetItem(sort SortName { .Names } [ .Patterns ])
+   rule #declareSortsSentence( ksyntax( ksort ( SORTNAME:Name ), _ )) => SetItem( sort SORTNAME { .Names } [ .Patterns ])
    rule #declareSortsSentence( KS ) => .Set    [owise]
 
    syntax Set ::=  #declareSymbols         ( KAuxSentences , Set ) [function]
                  | #declareSymbolsSentence ( KAuxSentence , Set )  [function]
 
-   rule #symbolDeclaration( #processedDefintion ( Def )) => #pipelineStepHelper( SymbolsDeclaration, .KAuxModules | Def )
+   rule #symbolDeclaration( #processedDefintion ( DEF )) => #pipelineStepHelper( SymbolsDeclaration, .KAuxModules | DEF )
 
 
-   rule <k> (#pipelineStepHelper( SymbolsDeclaration, M | kmodule Name KSentences endkmodule Ms)
+   rule <k> (#pipelineStepHelper( SymbolsDeclaration, MODULE | kmodule NAME KSENTENCES endkmodule MODULES)
               =>
-            #pipelineStepHelper( SymbolsDeclaration, kmodule Name KSentences endkmodule M | Ms))
+            #pipelineStepHelper( SymbolsDeclaration, kmodule NAME KSENTENCES endkmodule MODULE | MODULES))
            ...
        </k>
        <koreModule>
-         <name>               Name                                          </name>
-         <sortDeclarations>   SortsSet                                      </sortDeclarations>
-         <symbolDeclarations> .Set => #declareSymbols(KSentences, SortsSet) </symbolDeclarations>
+         <name>               NAME                                          </name>
+         <sortDeclarations>   SORTSSET                                      </sortDeclarations>
+         <symbolDeclarations> .Set => #declareSymbols(KSENTENCES, SORTSSET) </symbolDeclarations>
        </koreModule>
 
    rule #declareSymbols( .KAuxSentences, Set ) => .Set
 
-   rule #declareSymbols( KSntnc KSntncs, SortsSet)
+   rule #declareSymbols( KSNTNC KSNTNCS, SORTSSET)
                =>
-        #declareSymbolsSentence( KSntnc, SortsSet) #declareSymbols( KSntncs, SortsSet )
+        #declareSymbolsSentence( KSNTNC, SORTSSET) #declareSymbols( KSNTNCS, SORTSSET )
 
-   rule #declareSymbolsSentence( ksyntax( ksort( SrtName ) , klabel( SymbolName )) , SortSet)
+   rule #declareSymbolsSentence( ksyntax( ksort( SRTNAME ) , klabel( SYMBOLNAME )) , SORTSET)
           =>
-        SetItem(symbol SymbolName { .Names } ( .Sorts ) : SrtName [.Patterns])
-           requires (sort SrtName { .Names } [ .Patterns] in SortSet)
+        SetItem(symbol SYMBOLNAME { .Names } ( .Sorts ) : SRTNAME [.Patterns])
+           requires (sort SRTNAME { .Names } [ .Patterns] in SORTSET)
 
   syntax KItem        ::=  "#configurationModulesToTerm"
   syntax Declarations ::=  #toKoreSentences ( Set )     [function]
 
-  rule #processedDefintion( Def ) ~> #configurationDefinitionToTerm
+  rule #processedDefintion( DEF ) ~> #configurationDefinitionToTerm
         =>
-       #configurationDefinitionToTerm ~> #processedDefintion ( Def )
+       #configurationDefinitionToTerm ~> #processedDefintion ( DEF )
 
   rule <k> (#configurationDefinitionToTerm => #configurationModulesToTerm ) ... </k>
        <koreDefinition> _ => [ .Patterns ] .Modules </koreDefinition>
@@ -153,16 +153,16 @@ module KAUX
           _
             =>
           [ .Patterns ]
-             `module`( ModuleName, #toKoreSentences( SymbolDecls SortDecls ), [ .Patterns ])
+             `module`( MODULENAME, #toKoreSentences( SYMBOLDECLS SORTDECLS ), [ .Patterns ])
              .Modules
         </koreDefinition>
         <kore>
           ...
           <modules>
             (<koreModule>
-                <name>               ModuleName  </name>
-                <sortDeclarations>   SortDecls   </sortDeclarations>
-                <symbolDeclarations> SymbolDecls </symbolDeclarations>
+                <name>               MODULENAME  </name>
+                <sortDeclarations>   SORTDECLS   </sortDeclarations>
+                <symbolDeclarations> SYMBOLDECLS </symbolDeclarations>
              </koreModule>
                =>
              .Bag)
@@ -171,7 +171,7 @@ module KAUX
         </kore>
 
   rule #toKoreSentences( .Set )                 => .Declarations
-  rule #toKoreSentences( SetItem (Decl) Decls ) => Decl #toKoreSentences( Decls )
+  rule #toKoreSentences( SetItem (DECL) DECLS ) => DECL #toKoreSentences( DECLS )
 
   rule <k> (#configurationModulesToTerm => .K) ... </k>
        <kore>
