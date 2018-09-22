@@ -128,18 +128,27 @@ Collect sort declarations:
        </k>
        <koreModule>
          <name> MNAME </name>
-         <sortDeclarations>
-           DS => DS ++Declarations sort SORT { .Names } [ .Patterns ] .Declarations
-         </sortDeclarations>
+         <koreSorts>
+          .Bag
+           => (<koreSort>
+                 <koreSortName> SORT </koreSortName>
+                 <koreSortDeclaration> sort SORT { .Names } [ .Patterns ]
+                 </koreSortDeclaration>
+               </koreSort>
+               )
+          ...
+         </koreSorts>
          ...
        </koreModule>
     requires notBool(SORT in DECLARED_SORTS)
+
   rule <k> #visit( #collectSortDeclarations(DECLARED_SORTS), _
                  , ksyntax(ksort(SORT:Name), _, _, _))
         => #visitNext(#collectSortDeclarations(DECLARED_SORTS))
            ...
        </k>
     requires SORT in DECLARED_SORTS
+
   rule <k> #visit( #collectSortDeclarations(DECLARED_SORTS), _, krule(_, _))
         => #visitNext(#collectSortDeclarations(DECLARED_SORTS))
            ...
@@ -180,28 +189,30 @@ Collect symbol declarations
 
 ```k
   syntax KItem        ::=  "#toKoreSyntax"
-  // TODO (Issue): This rule doesn't handle multiple modules. Fix this rule.
-  rule <k> #toKoreSyntax ... </k>
-       <koreDefinition>
-         _
-           =>
-         [ .Patterns ]
-            `module`( MODULENAME, SORTDECLS ++Declarations SYMBOLDECLS, [ .Patterns ])
-            .Modules
-       </koreDefinition>
-       <kore>
-         ...
-         <modules>
-           (<koreModule>
-               <name>               MODULENAME  </name>
-               <sortDeclarations>   SORTDECLS   </sortDeclarations>
-               <symbolDeclarations> SYMBOLDECLS </symbolDeclarations>
-            </koreModule>
-              =>
-            .Bag)
-           ...
-         </modules>
-       </kore>
+                         | "#sortsToKoreSyntax"
+
+//  // TODO (Issue): This rule doesn't handle multiple modules. Fix this rule.
+//  rule <k> #toKoreSyntax ... </k>
+//       <koreDefinition>
+//         _
+//           =>
+//         [ .Patterns ]
+//            `module`( MODULENAME, SORTDECLS ++Declarations SYMBOLDECLS, [ .Patterns ])
+//            .Modules
+//       </koreDefinition>
+//       <kore>
+//         ...
+//         <modules>
+//           (<koreModule>
+//               <name>               MODULENAME  </name>
+//               <sortDeclarations>   SORTDECLS   </sortDeclarations>
+//               <symbolDeclarations> SYMBOLDECLS </symbolDeclarations>
+//            </koreModule>
+//              =>
+//            .Bag)
+//           ...
+//         </modules>
+//       </kore>
 
   rule <k> #toKoreSyntax => .K ... </k>
        <kore>
