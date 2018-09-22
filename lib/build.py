@@ -48,7 +48,7 @@ proj.build(proj.extdir('kore', '.git'), 'git-submodule-init')
 
 kink = proj.kdefinition( 'kink'
                        , main = proj.tangle('kink.md', proj.tangleddir('kink/kink.k'))
-                       , backend = 'java'
+                       , backend = 'ocaml'
                        , alias = 'kink'
                        , kompile_flags = '-I .'
                        )

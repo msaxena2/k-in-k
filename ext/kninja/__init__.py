@@ -23,7 +23,6 @@ class KProject(ninja.ninja_syntax.Writer):
         return self.extdir('k', *paths)
     def kbindir(self, *paths):
         return self.krepodir("k-distribution/target/release/k/bin/", *paths)
-
     def kninjadir(self, *paths):
         return os.path.join(os.path.dirname(__file__), *paths)
 
@@ -31,6 +30,8 @@ class KProject(ninja.ninja_syntax.Writer):
         return os.path.join('.build', *paths)
     def tangleddir(self, *paths):
         return self.builddir('tangled', *paths)
+    def opamroot(self, *paths):
+        return self.builddir('opam', *paths)
 
 # Generation of Ninja file
 #
@@ -39,6 +40,8 @@ class KProject(ninja.ninja_syntax.Writer):
         self.include(self.kninjadir("prelude.ninja"))
         self.newline()
         self.variable('builddir', self.builddir())
+        # TODO: Remove underscores for consistancy
+        self.variable('opam_root', self.opamroot())
         self.variable('k_repository', self.krepodir())
         self.variable('k_bindir', self.kbindir())
         self.variable('tangle_repository', self.extdir('pandoc-tangle'))
@@ -48,6 +51,7 @@ class KProject(ninja.ninja_syntax.Writer):
         self.build(self.krepodir(".git"), "git-submodule-init")
         self.build(self.kbindir("kompile"), "build-k", self.krepodir(".git"))
         self.build(self.extdir('pandoc-tangle', ".git"), "git-submodule-init")
+        self.build(self.opamroot('4.03.0+k/bin/ocamlc'), 'opam-build-ocamlc-k' '$k_bindir/kompile')
 
     def tangle(self, input, output):
         self.build(output, 'tangle', input, implicit = [ '$tangle_repository/.git' ])
