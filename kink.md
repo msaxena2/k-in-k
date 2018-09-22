@@ -178,25 +178,25 @@ Collect symbol declarations
   // TODO (Issue): This rule doesn't handle multiple modules. Fix this rule.
   rule <k> #toKoreSyntax ... </k>
        <koreDefinition>
-          _
-            =>
-          [ .Patterns ]
-             `module`( MODULENAME, SORTDECLS ++Declarations SYMBOLDECLS, [ .Patterns ])
-             .Modules
-        </koreDefinition>
-        <kore>
-          ...
-          <modules>
-            (<koreModule>
-                <name>               MODULENAME  </name>
-                <sortDeclarations>   SORTDECLS   </sortDeclarations>
-                <symbolDeclarations> SYMBOLDECLS </symbolDeclarations>
-             </koreModule>
-               =>
-             .Bag)
-            ...
-          </modules>
-        </kore>
+         _
+           =>
+         [ .Patterns ]
+            `module`( MODULENAME, SORTDECLS ++Declarations SYMBOLDECLS, [ .Patterns ])
+            .Modules
+       </koreDefinition>
+       <kore>
+         ...
+         <modules>
+           (<koreModule>
+               <name>               MODULENAME  </name>
+               <sortDeclarations>   SORTDECLS   </sortDeclarations>
+               <symbolDeclarations> SYMBOLDECLS </symbolDeclarations>
+            </koreModule>
+              =>
+            .Bag)
+           ...
+         </modules>
+       </kore>
 
   rule <k> #toKoreSyntax => .K ... </k>
        <kore>
