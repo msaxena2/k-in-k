@@ -28,7 +28,7 @@ module KFRONT-TO-KORE
   imports KFRONT-COMMON
   imports KORE-HELPERS
   imports DOMAINS
- 
+
   syntax Processed   ::=  #processedDefintion ( KFrontDefinition )
 
   syntax Intermdiate ::=   #initialization    ( KFrontDefinition )
@@ -55,7 +55,12 @@ module KFRONT-TO-KORE
                     <modules>
                       <koreModule multiplicity="*">
                         <name> .K </name>
-                        <sortDeclarations> .Declarations </sortDeclarations>
+                        <koreSorts>
+                          <koreSort multiplicity="*" type="List">
+                            <koreSortName> .K </koreSortName>
+                            <koreSortDeclaration> .K </koreSortDeclaration>
+                          </koreSort>
+                        </koreSorts>
                         <symbolDeclarations>
                           (symbol inj { From , To , .Names } ( From , .Sorts) : To [ .Patterns ])
                           .Declarations
