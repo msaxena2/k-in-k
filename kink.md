@@ -29,7 +29,7 @@ module KFRONT-TO-KORE
   imports KORE-HELPERS
   imports DOMAINS
 
-  syntax Name ::= "inj" | "From" | "To"
+  syntax Name ::= "inj" | "From" | "To" | "function"
 
   configuration <T>
                   <k> #createModules
@@ -47,12 +47,11 @@ module KFRONT-TO-KORE
                         <sorts>
                           <sortDeclaration multiplicity="*" type="List" > .K </sortDeclaration>
                         </sorts>
-                        <symbols>
-                          <xsymbol multiplicity="*" type="List">
-                              <symbolName> .K:Name </symbolName>
+                        <koreSymbols>
+                          <koreSymbol multiplicity="*" type="List">
                               <symbolDeclaration> .K:Declaration </symbolDeclaration>
-                          </xsymbol>
-                        </symbols>
+                          </koreSymbol>
+                        </koreSymbols>
                       </koreModule>
                     </modules>
                   </kore>
@@ -73,14 +72,14 @@ For each empty module in the K Frontend syntax create a new `<koreModule>` cell:
        <modules> .Bag
               => <koreModule>
                    <name> MNAME </name>
-                   <symbols>
-                     <xsymbol>
-                       <symbolName> inj </symbolName>
+                   <koreSymbols>
+                     <koreSymbol>
                        <symbolDeclaration>
                            (symbol inj { From , To , .Names } ( From , .Sorts) : To [ .Patterns ])
-                           </symbolDeclaration>
-                     </xsymbol>
-                   </symbols>
+                       </symbolDeclaration>
+                       ...
+                     </koreSymbol>
+                   </koreSymbols>
                    ...
                  </koreModule>
              ...
@@ -151,26 +150,31 @@ Collect symbol declarations
 
 ```k
   syntax KFrontSentenceVisitor ::= "#collectSymbols"
-  rule <k> #visit(#collectSymbols, MNAME, ksyntax(ksort(SORT:Name), klabel(LABEL), ARGSORTS, _))
+  rule <k> #visit(#collectSymbols, MNAME, ksyntax(ksort(SORT:Name), klabel(LABEL), ARGSORTS, FATTRS))
         => #visitNext(#collectSymbols)
           ...
        </k>
        <koreModule>
          <name> MNAME </name>
-         <symbols> .Bag =>
-           <xsymbol>
-             <symbolName> LABEL </symbolName>
+         <koreSymbols> .Bag =>
+           <koreSymbol>
              <symbolDeclaration>
-               symbol LABEL { .Names } ( KFrontSorts2KoreSorts(ARGSORTS) ) : SORT { .Sorts } [.Patterns]
+               symbol LABEL { .Names } ( KFrontSorts2KoreSorts(ARGSORTS) ) : SORT { .Sorts } [ KFrontAttributes2KoreAttributes(FATTRS) ]
              </symbolDeclaration>
-           </xsymbol>
+           </koreSymbol>
            ...
-         </symbols>
+         </koreSymbols>
          ...
        </koreModule>
   rule <k> #visit(#collectSymbols, _, krule(_, _)) => #visitNext(#collectSymbols) ... </k>
 //  //TODO: Owise rule fails here as well.
 //  rule <k> #visit(#collectSymbols, _, _) => #visitNext(#collectSymbols) ... </k>
+
+  syntax Patterns ::= KFrontAttributes2KoreAttributes(KFrontAttributes) [function]
+  rule KFrontAttributes2KoreAttributes(.KFrontAttributes) => .Patterns
+  rule KFrontAttributes2KoreAttributes(kattribute(function) ; S)
+    => function { .Sorts } (.Patterns)
+     , KFrontAttributes2KoreAttributes(S)
 
 // TODO: Take into account sort params. Will need to do a lookup.
    syntax Sorts ::= KFrontSorts2KoreSorts(KFrontSorts) [function]
@@ -226,18 +230,18 @@ TODO: We don't handle multiple modules.
         => [ ATTRS ] `module`( MNAME , DECS ++Declarations SYMBOLDECL, [.Patterns])
        </koreDefinition>
        <name> MNAME </name>
-       <symbols>
-         <xsymbol>
+       <koreSymbols>
+         <koreSymbol>
            <symbolDeclaration>
              SYMBOLDECL:Declaration
            </symbolDeclaration>
            ...
-         </xsymbol> => .Bag
+         </koreSymbol> => .Bag
          ...
-       </symbols>
+       </koreSymbols>
 
   rule <k> #writeSymbolDeclarations => .K ... </k>
-       <symbols> .Bag </symbols>
+       <koreSymbols> .Bag </koreSymbols>
 ```
 
 ```k
@@ -245,7 +249,7 @@ TODO: We don't handle multiple modules.
        <modules>
          (<koreModule>
              <sorts> .Bag </sorts>
-             <symbols> .Bag </symbols>
+             <koreSymbols> .Bag </koreSymbols>
              ...
           </koreModule>
             =>
