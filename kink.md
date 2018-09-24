@@ -35,6 +35,7 @@ module KFRONT-TO-KORE
                   <k> #createModules
                    ~> #withEachSentence(#collectSortDeclarations(.Set))
                    ~> #withEachSentence(#collectSymbols)
+                   ~> #withEachSentence(#translateFunctionRules)
                    ~> #toKoreSyntax
                   </k>
                   <kfront> $PGM:KFrontModules </kfront>
@@ -52,6 +53,9 @@ module KFRONT-TO-KORE
                               <symbolDeclaration> .K:Declaration </symbolDeclaration>
                           </koreSymbol>
                         </koreSymbols>
+                        <axioms>
+                          <axiomDeclaration multiplicity="*" type="List"> .K:Declaration </axiomDeclaration>
+                        </axioms>
                       </koreModule>
                     </modules>
                   </kore>
@@ -180,6 +184,57 @@ Collect symbol declarations
    syntax Sorts ::= KFrontSorts2KoreSorts(KFrontSorts) [function]
    rule KFrontSorts2KoreSorts(.KFrontSorts)  => .Sorts
    rule KFrontSorts2KoreSorts(ksort(N) ; SS) => N { .Sorts } , KFrontSorts2KoreSorts(SS)
+```
+
+Translate rewrites for functional symbols:
+
+```k
+  syntax KFrontSentenceVisitor ::= "#translateFunctionRules"
+  syntax Name ::= "R"
+  rule <k> #visit(#translateFunctionRules, MNAME, krule(klabel(LHS), klabel(RHS)))
+        => #visitNext(#translateFunctionRules)
+           ...
+       </k>
+       <koreModule>
+         <name> MNAME </name>
+           <koreSymbol>
+             <symbolDeclaration>
+               symbol LHS':Name { _ } ( _ ) : SORTNAME { .Sorts } [ ATTRS ]
+             </symbolDeclaration>
+             ...
+           </koreSymbol>
+         <axioms> .Bag =>
+           <axiomDeclaration>
+             axiom{ R , .Names}
+                \equals{ SORTNAME { .Sorts }, R }
+                       ( LHS { .Sorts } ( .Patterns )
+                       , RHS { .Sorts } ( .Patterns )
+                       )
+                [ .Patterns ]
+           </axiomDeclaration>
+         </axioms>
+         ...
+       </koreModule>
+    requires (function { .Sorts } (.Patterns)) inPatterns ATTRS
+
+//  rule <k> #visit(#translateFunctionRules, MNAME, krule(klabel(LHS), klabel(RHS)))
+//        => #visitNext(#translateFunctionRules)
+//           ...
+//       </k>
+//       <koreModule>
+//         <name> MNAME </name>
+//         <koreSymbol>
+//           <symbolDeclaration>
+//             symbol LHS { _ } ( _ ) : SORTNAME { .Sorts } [ ATTRS ]
+//           </symbolDeclaration>
+//         </koreSymbol>
+//         ...
+//       </koreModule>
+//    requires notBool((function { .Sorts } (.Patterns)) inPatterns ATTRS)
+  rule <k> #visit(#translateFunctionRules, MNAME, ksyntax(_, _, _, _))
+        => #visitNext(#translateFunctionRules)
+           ...
+       </k>
 ```
 
 Finally, convert each `<module>` cell into actual kore syntax.
