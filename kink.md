@@ -49,7 +49,7 @@ module KFRONT-TO-KORE
                           <sortDeclaration multiplicity="*" type="List" > .K </sortDeclaration>
                         </sorts>
                         <koreSymbols>
-                          <koreSymbol multiplicity="*" type="List">
+                          <koreSymbol multiplicity="*" type="Set">
                               <symbolDeclaration> .K:Declaration </symbolDeclaration>
                           </koreSymbol>
                         </koreSymbols>
@@ -199,7 +199,7 @@ Translate rewrites for functional symbols:
          <name> MNAME </name>
            <koreSymbol>
              <symbolDeclaration>
-               symbol LHS':Name { _ } ( _ ) : SORTNAME { .Sorts } [ ATTRS ]
+               symbol LHS:Name { _ } ( _ ) : SORTNAME { .Sorts } [ ATTRS ]
              </symbolDeclaration>
              ...
            </koreSymbol>
@@ -244,8 +244,9 @@ TODO: We don't handle multiple modules.
   syntax KItem ::= "#toKoreSyntax"
                  | "#writeSortDeclarations"
                  | "#writeSymbolDeclarations"
+                 | "#writeAxioms"
   rule <k> #toKoreSyntax
-        => #writeSortDeclarations ~> #writeSymbolDeclarations ~> #toKoreSyntax
+        => #writeSortDeclarations ~> #writeSymbolDeclarations ~> #writeAxioms ~> #toKoreSyntax
        </k>
        <koreDefinition>
         .K => [ .Patterns ]
@@ -300,11 +301,30 @@ TODO: We don't handle multiple modules.
 ```
 
 ```k
+  rule <k> #writeAxioms ... </k>
+       <koreDefinition>
+           [ ATTRS ] `module`( MNAME , DECS , [.Patterns])
+        => [ ATTRS ] `module`( MNAME , DECS ++Declarations AXIOM, [.Patterns])
+       </koreDefinition>
+       <name> MNAME </name>
+       <axioms>
+         <axiomDeclaration>
+           AXIOM:Declaration
+         </axiomDeclaration> => .Bag
+         ...
+       </axioms>
+
+  rule <k> #writeAxioms => .K ... </k>
+       <axioms> .Bag </axioms>
+```
+
+```k
   rule <k> #toKoreSyntax ... </k>
        <modules>
          (<koreModule>
              <sorts> .Bag </sorts>
              <koreSymbols> .Bag </koreSymbols>
+             <axioms> .Bag </axioms>
              ...
           </koreModule>
             =>
