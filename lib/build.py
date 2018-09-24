@@ -79,7 +79,8 @@ out = proj.build( inputs  = bar_kast
                 , variables = { 'kore' : foobar_kore
                               }
                 )
-foobar_k5.check_actual_expected('foobar/programs/bar.foobar.kink', out, 'foobar/programs/bar.foobar.expected')
+test = foobar_k5.check_actual_expected('foobar/programs/bar.foobar.kink', out, 'foobar/programs/bar.foobar.expected')
+proj.default(test)
 
 out = proj.build( inputs  = bar_kast
                 , rule    = 'kore-exec'
@@ -88,4 +89,5 @@ out = proj.build( inputs  = bar_kast
                 , variables = { 'kore' : 'foobar/foobar.handwritten.kore'
                               }
                 )
-foobar_k5.check_actual_expected('foobar/programs/bar.foobar.handwritten', out, 'foobar/programs/bar.foobar.expected')
+test = foobar_k5.check_actual_expected('foobar/programs/bar.foobar.handwritten', out, 'foobar/programs/bar.foobar.expected')
+proj.default(test)

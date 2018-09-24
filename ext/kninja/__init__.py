@@ -121,12 +121,12 @@ class KDefinition:
         return output
 
     def check_actual_expected(self, name, actual, expected):
-        self.writer.build( outputs   = name
-                         , rule      = 'check-test-result'
-                         , inputs    = actual
-                         , implicit  = expected
-                         , variables = { 'expected' : expected }
-                         )
+        return self.writer.build( outputs   = name
+                                , rule      = 'check-test-result'
+                                , inputs    = actual
+                                , implicit  = expected
+                                , variables = { 'expected' : expected }
+                                )
 
     def krun_and_check(self, output_dir, input, expected, krun_flags = None):
         basename  = os.path.basename(input)
