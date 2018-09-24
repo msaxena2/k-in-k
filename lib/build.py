@@ -26,6 +26,7 @@ def test_kfront_to_kore(proj, kdef, testfile):
 # ==================
 
 proj = KProject()
+proj.build_ocaml()
 
 # Building Kore & Kore Support
 # ----------------------------

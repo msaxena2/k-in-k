@@ -51,7 +51,10 @@ class KProject(ninja.ninja_syntax.Writer):
         self.build(self.krepodir(".git"), "git-submodule-init")
         self.build(self.kbindir("kompile"), "build-k", self.krepodir(".git"))
         self.build(self.extdir('pandoc-tangle', ".git"), "git-submodule-init")
-        self.build(self.opamroot('4.03.0+k/bin/ocamlc'), 'opam-build-ocamlc-k' '$k_bindir/kompile')
+
+    def build_ocaml(self):
+        self.include(self.kninjadir('build-ocaml.ninja'))
+        self.default('ocaml-deps')
 
     def tangle(self, input, output):
         self.build(output, 'tangle', input, implicit = [ '$tangle_repository/.git' ])
