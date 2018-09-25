@@ -72,22 +72,53 @@ bar_kast = foobar_k5.kast( output = proj.builddir('foobar/programs/bar.foobar.ka
                          , input  =               'foobar/programs/bar.foobar'
                          , kast_flags = '--kore'
                          )
-out = proj.build( inputs  = bar_kast
-                , rule    = 'kore-exec'
-                , outputs = proj.builddir('foobar/programs/bar.foobar.kink.out')
-                , implicit = foobar_kore
-                , variables = { 'kore' : foobar_kore
-                              }
-                )
-test = foobar_k5.check_actual_expected('foobar/programs/bar.foobar.kink', out, 'foobar/programs/bar.foobar.expected')
-proj.default(test)
+fizz_kast = foobar_k5.kast( output = proj.builddir('foobar/programs/fizz.foobar.kast')
+                          , input  =               'foobar/programs/fizz.foobar'
+                          , kast_flags = '--kore'
+                          )
+out_bar = proj.build( inputs  = bar_kast
+                    , rule    = 'kore-exec'
+                    , outputs = proj.builddir('foobar/programs/bar.foobar.kink.out')
+                    , implicit = foobar_kore
+                    , variables = { 'kore' : foobar_kore
+                                  }
+                    )
+out_fizz = proj.build( inputs  = fizz_kast
+                     , rule    = 'kore-exec'
+                     , outputs = proj.builddir('foobar/programs/fizz.foobar.kink.out')
+                     , implicit = foobar_kore
+                     , variables = { 'kore' : foobar_kore
+                                   }
+                     )
+test_bar = foobar_k5.check_actual_expected('foobar/programs/bar.foobar.kink',
+        out_bar, 'foobar/programs/bar.foobar.expected')
 
-out = proj.build( inputs  = bar_kast
-                , rule    = 'kore-exec'
-                , outputs = proj.builddir('foobar/programs/bar.foobar.k5.out')
-                , implicit = 'foobar/foobar.handwritten.kore'
-                , variables = { 'kore' : 'foobar/foobar.handwritten.kore'
-                              }
-                )
-test = foobar_k5.check_actual_expected('foobar/programs/bar.foobar.handwritten', out, 'foobar/programs/bar.foobar.expected')
-proj.default(test)
+test_fizz = foobar_k5.check_actual_expected('foobar/programs/fizz.foobar.kink',
+        out_fizz, 'foobar/programs/fizz.foobar.expected')
+
+proj.default(test_bar)
+proj.default(test_fizz)
+
+out_bar = proj.build( inputs  = bar_kast
+                    , rule    = 'kore-exec'
+                    , outputs = proj.builddir('foobar/programs/bar.foobar.k5.out')
+                    , implicit = 'foobar/foobar.handwritten.kore'
+                    , variables = { 'kore' : 'foobar/foobar.handwritten.kore'
+                                  }
+                    )
+out_fizz = proj.build( inputs  = fizz_kast
+                     , rule    = 'kore-exec'
+                     , outputs = proj.builddir('foobar/programs/fizz.foobar.k5.out')
+                     , implicit = 'foobar/foobar.handwritten.kore'
+                     , variables = { 'kore' : 'foobar/foobar.handwritten.kore'
+                                   }
+                     )
+test_bar = foobar_k5.check_actual_expected( 'foobar/programs/bar.foobar.handwritten'
+                                           , out_bar
+                                           , 'foobar/programs/bar.foobar.expected')
+
+test_fizz = foobar_k5.check_actual_expected( 'foobar/programs/fizz.foobar.handwritten'
+                                            , out_fizz
+                                            , 'foobar/programs/fizz.foobar.expected')
+proj.default(test_bar)
+proj.default(test_fizz)

@@ -49,19 +49,31 @@ module FOOBAR
   sort SortFoo{} []
 
 // symbols
-  symbol Lblbar'Unds'FOOBAR'Unds'{}() : SortFoo{} [productionID{}("1920907467"), originalPrd{}(), function{}(), klabel{}("bar")]
+  symbol Lblbar'Unds'FOOBAR'Unds'{}() : SortFoo{} [productionID{}("1920907467"),
+  originalPrd{}(), klabel{}("bar"), function{}()]
   symbol Lblbuzz'Unds'FOOBAR'Unds'{}() : SortFoo{} [productionID{}("970535245"), originalPrd{}(), klabel{}("buzz"), functional{}(), constructor{}()]
+  symbol Lblfizz'Unds'FOOBAR'Unds'{}() : SortFoo{} [klabel{}("fizz")]
 
 // generated axioms
 
 // rules
 // rule `bar_FOOBAR_`(.KList)=>`buzz_FOOBAR_`(.KList) requires #token("true","Bool") ensures #token("true","Bool") [contentStartColumn(8) contentStartLine(4) org.kframework.attributes.Location(Location(4,8,4,19)) org.kframework.attributes.Source(Source(/Users/manasvi/Projects/k-in-k/./syntax-k/foobar.k)) org.kframework.definition.Production(syntax RuleContent ::= K)]
-  axiom{R} \implies{R} (
-    \top{R}(),
-    \and{R} (
-      \equals{SortFoo{},R} (
-        Lblbar'Unds'FOOBAR'Unds'{}(),
-        Lblbuzz'Unds'FOOBAR'Unds'{}()),
-      \top{R}()))
-  [org'Stop'kframework'Stop'definition'Stop'Production{}("syntax RuleContent ::= K")]
-endmodule []
+ axiom{R} \implies{R} (
+   \top{R}(),
+   \and{R} (
+     \equals{SortFoo{},R} (
+       Lblbar'Unds'FOOBAR'Unds'{}(),
+       Lblbuzz'Unds'FOOBAR'Unds'{}()),
+     \top{R}()))
+ [org'Stop'kframework'Stop'definition'Stop'Production{}("syntax RuleContent ::= K")]
+
+axiom{} \rewrites{SortK{}}( kseq{}( inj{SortFoo{}, SortKItem{}}(Lblfizz'Unds'FOOBAR'Unds'{}())
+                                  , VarDotVar0:SortK{}
+                                  )
+                         , kseq{}( inj{SortFoo{}, SortKItem{}}(Lblbuzz'Unds'FOOBAR'Unds'{}())
+                                  , VarDotVar0:SortK{}
+                                 )
+                          )
+[]
+
+  endmodule []

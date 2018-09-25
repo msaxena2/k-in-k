@@ -33,7 +33,15 @@ kmodule FOOBAR
          , // args
          ,
          )
+
+  ksyntax( ksort(SortFoo)
+         , klabel(Lblfizz'Unds'FOOBAR'Unds')
+         , // args
+         , // attrs
+         )
+
   krule( klabel(Lblbar'Unds'FOOBAR'Unds')
        , klabel(Lblbuzz'Unds'FOOBAR'Unds')
        )
+
 endkmodule
